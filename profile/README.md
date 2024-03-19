@@ -4,9 +4,11 @@ A Hackaton Company SA, uma empresa de grande porte com mais de 100.000 colaborad
 
 ## Ponto Eletronico
 
-![logo ponto eletronico](logo-ponto-eletronico.png)
+<p align="center">
+  <img src="https://github.com/postech-hackaton-company-sa/.github/blob/main/profile/logo-ponto-eletronico.png?raw=true" />
+</p>
 
-# Explicar a razao de usar microservicos #
+-> Explicar a razao de usar microservicos
 
 ### Desenho da pipeline <img src="https://img.shields.io/badge/MVP-1-blue.svg?">
 

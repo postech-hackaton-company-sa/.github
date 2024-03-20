@@ -2,6 +2,10 @@
 
 A Hackaton Company SA, uma empresa de grande porte com mais de 100.000 colaboradores e que atende diversas áreas, inclusive tecnologia, está em um ponto de transição crucial.
 
+## To do list
+
+
+
 ## Ponto Eletrônico
 
 <p align="center">
@@ -12,26 +16,47 @@ A Hackaton Company SA, uma empresa de grande porte com mais de 100.000 colaborad
   O uso de microserviços em vez de uma abordagem monolítica foi uma decisão estratégica crucial para a Hackaton Company SA, especialmente considerando sua magnitude com mais de 100.000 colaboradores. Compreendendo a necessidade de escala horizontal para acomodar esse volume de usuários, optou-se por uma arquitetura distribuída. A escalabilidade é fundamental para garantir que o sistema possa crescer de forma flexível e eficiente à medida que a empresa expande. Além disso, a arquitetura de microserviços permite uma maior modularidade e independência entre os componentes do sistema, o que facilita o desenvolvimento, implantação e manutenção contínua. Dessa forma, a empresa pode iterar mais rapidamente, implementar melhorias e responder de forma ágil às demandas em evolução do negócio e dos usuários. Essa abordagem também oferece a flexibilidade necessária para integrar novas funcionalidades e serviços conforme necessário, mantendo a coesão e a robustez do sistema como um todo.
 </p>
 
-#### Arquitetura <img src="https://img.shields.io/badge/MVP-1-blue.svg?">
+### Arquitetura AWS
 
 <p align="center">
   <img src="https://github.com/postech-hackaton-company-sa/.github/blob/main/profile/mvp1-arquitetura.png?raw=true" />
 </p>
 
--> Explicacao
+| Projeto                   | Cobertura de Código SonarCloud |
+|---------------------------|--------------------------------|
+| [postech-hackaton-ponto-eletronico](https://github.com/postech-hackaton-company-sa/postech-hackaton-ponto-eletronico) | [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=postech-hackaton-company-sa_postech-hackaton-ponto-eletronico&metric=coverage)](https://sonarcloud.io/summary/new_code?id=postech-hackaton-company-sa_postech-hackaton-ponto-eletronico) |
+| [postech-hackaton-relatorios](https://github.com/postech-hackaton-company-sa/postech-hackaton-relatorios) | Not yet |
+| [postech-hackaton-funcionarios](https://github.com/postech-hackaton-company-sa/postech-hackaton-funcionarios) | Not yet |
 
-#### Como rodar a aplicação <img src="https://img.shields.io/badge/MVP-1-blue.svg?">
+A escolha de uma solução pensada para a AWS, com diversos componentes integrados, foi motivada por uma série de razões estratégicas e técnicas. O uso do `API Gateway` para receber as requisições oferece uma camada de segurança e controle de acesso eficaz, além de possibilitar a fácil escalabilidade do sistema conforme necessário. O emprego do Lambda para realizar as autenticações no `Cognito` garante uma autenticação segura e eficiente dos usuários, aproveitando os serviços de gerenciamento de identidade da AWS.
 
-### Desenho da pipeline <img src="https://img.shields.io/badge/MVP-1-blue.svg?">
+A utilização de um `VPN link` conectando-se ao `Load Balancer` é crucial para garantir uma comunicação segura e confiável entre os componentes internos do sistema. O `Load Balancer`, por sua vez, distribui o tráfego de forma equilibrada entre os três componentes principais do cluster interno.
 
-### Melhorias futuras <img src="https://img.shields.io/badge/Melhorias-yellow.svg">
+No que diz respeito aos bancos de dados, a escolha de utilizar tanto um banco de dados relacional (`RDS`) quanto um banco de dados NoSQL (`DocumentDB`) está alinhada com as necessidades específicas de cada componente do sistema. O `RDS` é ideal para o gerenciamento das contas de funcionários devido à sua estrutura organizada e capacidade de realizar consultas complexas e transações seguras. Por outro lado, o `DocumentDB` é utilizado para o registro do ponto eletrônico devido à sua capacidade de escalar horizontalmente e lidar com grandes volumes de dados de forma eficiente. Além disso, o `DocumentDB` também é acessado pelo Lambda de geração de relatórios
+
+#### Como rodar a aplicação
+
+### Desenho da pipeline
+
+### Arquitetura com docker-compose
+
+<p align="center">
+  <img src="https://github.com/postech-hackaton-company-sa/.github/blob/main/profile/mvp1-arquitetura-dockercompose.png?raw=true" />
+</p>
+
+Uma primeira abordagem foi criada com a utilizacao de puramente Docker. Esta solucao pode ser usada com o arquivo presente no arquivo [docker-compose](./../infra/docker-compose.yaml) da pasta `infra`.
+
+O fluxo dos dados se assemelha com a solucao proposta para a AWS, sem toda a seguranca e comodidade da cloud. O usuario deve realizar o login atraves do KeyCloak e uma vez que tenha o JWT ele pode realizar a chamada dos demais servicos e, a depender da role do usuario, ele conseguira ou nao obter os dados que deseja, ou realizar as acoes.
+
+Ao inves do servico de envio de email da AWS SES, optou-se por uma abordagem mais primitiva, com o uso integrado da biblioteca `JavaMailSender` no servico de relatorios.
+
+### Melhorias futuras
 
 - [ ] A depender do volume de consultas talvez faça sentido alterar o serviço postech-hackaton-posto-eletronico para uma arquitetura CQRS.
 
+### MVP 2
 
-### MVP 2 <img src="https://img.shields.io/badge/MVP-2-red.svg?">
+#### Arquitetura
 
-#### Arquitetura <img src="https://img.shields.io/badge/MVP-2-red.svg?">
-
--> Desenho 
+-> Desenho
 -> Explicacao

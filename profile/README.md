@@ -74,8 +74,5 @@ Ao inves do servico de envio de email da AWS SES, optou-se por uma abordagem mai
 <p align="center">
   <img src="https://github.com/postech-hackaton-company-sa/.github/blob/main/profile/aws-mvp2.svg?raw=true" width="120%"/>
 </p>
-<p align="center">
-  <a href="https://raw.githubusercontent.com/postech-hackaton-company-sa/.github/229cda89b56f39f0b30cf06a84d10fe8795e533e/profile/aws-mvp2.svg" align="center">Click aqui</a> para aumentar o zoom
-</p>
 
 -> Explicacao

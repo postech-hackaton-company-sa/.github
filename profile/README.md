@@ -19,7 +19,7 @@ A Hackaton Company SA, uma empresa de grande porte com mais de 100.000 colaborad
 ### Arquitetura AWS
 
 <p align="center">
-  <img src="https://github.com/postech-hackaton-company-sa/.github/blob/main/profile/aws-mvp1.png?raw=true" />
+  <img src="https://github.com/postech-hackaton-company-sa/.github/blob/main/profile/aws-mvp1.svg?raw=true" width="80%"/>
 </p>
 
 | Projeto                   | Cobertura de Código SonarCloud |
@@ -38,11 +38,10 @@ A Hackaton Company SA, uma empresa de grande porte com mais de 100.000 colaborad
   No que diz respeito aos bancos de dados, a escolha de utilizar tanto um banco de dados relacional (<code>RDS</code>) quanto um banco de dados NoSQL (<code>DocumentDB</code>) está alinhada com as necessidades específicas de cada componente do sistema. O <code>RDS</code> é ideal para o gerenciamento das contas de funcionários devido à sua estrutura organizada e capacidade de realizar consultas complexas e transações seguras. Por outro lado, o <code>DocumentDB</code> é utilizado para o registro do ponto eletrônico devido à sua capacidade de escalar horizontalmente e lidar com grandes volumes de dados de forma eficiente. Além disso, o <code>DocumentDB</code> também é acessado pelo Lambda de geração de relatórios
 </p>
 
-#### Como rodar a aplicação
-
-### Desenho da pipeline
-
-![alt text](image.png)
+### Pipeline
+<p align="center">
+<img src="https://github.com/postech-hackaton-company-sa/.github/blob/main/profile/image.png?raw=true" />
+</p>
 
 <p align="justify">
   Primeiro, o job "check" é acionado quando ocorre um push no repositório ou manualmente. Nesse ponto, o ambiente Java com JDK 17 é configurado e os pacotes SonarCloud e Gradle são gerenciados em cache. O projeto é construído e analisado utilizando o Gradle, e os resultados são enviados para o SonarCloud. Em seguida, o job "build" é executado apenas se houver um push na branch principal (main) e se o job "check" for concluído com sucesso. Aqui, a imagem Docker do aplicativo é criada e publicada no Docker Hub, com base no hash do commit mais recente. Por fim, o job "deploy" é acionado nas mesmas condições do "build" e após a conclusão bem-sucedida do job "build". Esse job simula a atualização do aplicativo na EC2, onde a imagem mais recente é puxada do Docker Hub, o contêiner antigo é removido (simulado), um novo contêiner Docker é executado (simulado) e são realizadas etapas simuladas de limpeza.
@@ -59,6 +58,10 @@ Uma primeira abordagem foi criada com a utilizacao de puramente Docker. Esta sol
 O fluxo dos dados se assemelha com a solucao proposta para a AWS, sem toda a seguranca e comodidade da cloud. O usuario deve realizar o login atraves do KeyCloak e uma vez que tenha o JWT ele pode realizar a chamada dos demais servicos e, a depender da role do usuario, ele conseguira ou nao obter os dados que deseja, ou realizar as acoes.
 
 Ao inves do servico de envio de email da AWS SES, optou-se por uma abordagem mais primitiva, com o uso integrado da biblioteca `JavaMailSender` no servico de relatorios.
+
+#### Como rodar a aplicação
+
+
 
 ### Melhorias futuras
 

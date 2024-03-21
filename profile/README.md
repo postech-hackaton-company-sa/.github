@@ -25,7 +25,7 @@ A Hackaton Company SA, uma empresa de grande porte com mais de 100.000 colaborad
 | Projeto                   | Cobertura de Código SonarCloud |
 |---------------------------|--------------------------------|
 | [postech-hackaton-ponto-eletronico](https://github.com/postech-hackaton-company-sa/postech-hackaton-ponto-eletronico) | [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=postech-hackaton-company-sa_postech-hackaton-ponto-eletronico&metric=coverage)](https://sonarcloud.io/summary/new_code?id=postech-hackaton-company-sa_postech-hackaton-ponto-eletronico) |
-| [postech-hackaton-relatorios](https://github.com/postech-hackaton-company-sa/postech-hackaton-relatorios) | Not yet |
+| [postech-hackaton-relatorios](https://github.com/postech-hackaton-company-sa/postech-hackaton-relatorios) | [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=postech-hackaton-company-sa_postech-hackaton-relatorios&metric=coverage)](https://sonarcloud.io/summary/new_code?id=postech-hackaton-company-sa_postech-hackaton-relatorios) |
 | [postech-hackaton-funcionarios](https://github.com/postech-hackaton-company-sa/postech-hackaton-funcionarios) | Not yet |
 
 <p align="justify">

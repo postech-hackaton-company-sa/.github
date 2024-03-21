@@ -19,7 +19,7 @@ A Hackaton Company SA, uma empresa de grande porte com mais de 100.000 colaborad
 ### Arquitetura AWS
 
 <p align="center">
-  <img src="https://github.com/postech-hackaton-company-sa/.github/blob/main/profile/mvp1-arquitetura.png?raw=true" />
+  <img src="https://github.com/postech-hackaton-company-sa/.github/blob/main/profile/aws-mvp1.png?raw=true" />
 </p>
 
 | Projeto                   | Cobertura de Código SonarCloud |
@@ -28,20 +28,30 @@ A Hackaton Company SA, uma empresa de grande porte com mais de 100.000 colaborad
 | [postech-hackaton-relatorios](https://github.com/postech-hackaton-company-sa/postech-hackaton-relatorios) | Not yet |
 | [postech-hackaton-funcionarios](https://github.com/postech-hackaton-company-sa/postech-hackaton-funcionarios) | Not yet |
 
-A escolha de uma solução pensada para a AWS, com diversos componentes integrados, foi motivada por uma série de razões estratégicas e técnicas. O uso do `API Gateway` para receber as requisições oferece uma camada de segurança e controle de acesso eficaz, além de possibilitar a fácil escalabilidade do sistema conforme necessário. O emprego do Lambda para realizar as autenticações no `Cognito` garante uma autenticação segura e eficiente dos usuários, aproveitando os serviços de gerenciamento de identidade da AWS.
-
-A utilização de um `VPN link` conectando-se ao `Load Balancer` é crucial para garantir uma comunicação segura e confiável entre os componentes internos do sistema. O `Load Balancer`, por sua vez, distribui o tráfego de forma equilibrada entre os três componentes principais do cluster interno.
-
-No que diz respeito aos bancos de dados, a escolha de utilizar tanto um banco de dados relacional (`RDS`) quanto um banco de dados NoSQL (`DocumentDB`) está alinhada com as necessidades específicas de cada componente do sistema. O `RDS` é ideal para o gerenciamento das contas de funcionários devido à sua estrutura organizada e capacidade de realizar consultas complexas e transações seguras. Por outro lado, o `DocumentDB` é utilizado para o registro do ponto eletrônico devido à sua capacidade de escalar horizontalmente e lidar com grandes volumes de dados de forma eficiente. Além disso, o `DocumentDB` também é acessado pelo Lambda de geração de relatórios
+<p align="justify">
+  A escolha de uma solução pensada para a AWS, com diversos componentes integrados, foi motivada por uma série de razões estratégicas e técnicas. O uso do <code>API Gateway</code> para receber as requisições oferece uma camada de segurança e controle de acesso eficaz, além de possibilitar a fácil escalabilidade do sistema conforme necessário. O emprego do Lambda para realizar as autenticações no <code>Cognito</code> garante uma autenticação segura e eficiente dos usuários, aproveitando os serviços de gerenciamento de identidade da AWS.
+</p>
+<p align="justify">
+  A utilização de um <code>VPN link</code> conectando-se ao <code>Load Balancer</code> é crucial para garantir uma comunicação segura e confiável entre os componentes internos do sistema. O <code>Load Balancer</code>, por sua vez, distribui o tráfego de forma equilibrada entre os três componentes principais do cluster interno.
+</p>
+<p align="justify">
+  No que diz respeito aos bancos de dados, a escolha de utilizar tanto um banco de dados relacional (<code>RDS</code>) quanto um banco de dados NoSQL (<code>DocumentDB</code>) está alinhada com as necessidades específicas de cada componente do sistema. O <code>RDS</code> é ideal para o gerenciamento das contas de funcionários devido à sua estrutura organizada e capacidade de realizar consultas complexas e transações seguras. Por outro lado, o <code>DocumentDB</code> é utilizado para o registro do ponto eletrônico devido à sua capacidade de escalar horizontalmente e lidar com grandes volumes de dados de forma eficiente. Além disso, o <code>DocumentDB</code> também é acessado pelo Lambda de geração de relatórios
+</p>
 
 #### Como rodar a aplicação
 
 ### Desenho da pipeline
 
+![alt text](image.png)
+
+<p align="justify">
+  Primeiro, o job "check" é acionado quando ocorre um push no repositório ou manualmente. Nesse ponto, o ambiente Java com JDK 17 é configurado e os pacotes SonarCloud e Gradle são gerenciados em cache. O projeto é construído e analisado utilizando o Gradle, e os resultados são enviados para o SonarCloud. Em seguida, o job "build" é executado apenas se houver um push na branch principal (main) e se o job "check" for concluído com sucesso. Aqui, a imagem Docker do aplicativo é criada e publicada no Docker Hub, com base no hash do commit mais recente. Por fim, o job "deploy" é acionado nas mesmas condições do "build" e após a conclusão bem-sucedida do job "build". Esse job simula a atualização do aplicativo na EC2, onde a imagem mais recente é puxada do Docker Hub, o contêiner antigo é removido (simulado), um novo contêiner Docker é executado (simulado) e são realizadas etapas simuladas de limpeza.
+</p>
+
 ### Arquitetura com docker-compose
 
 <p align="center">
-  <img src="https://github.com/postech-hackaton-company-sa/.github/blob/main/profile/mvp1-arquitetura-dockercompose.png?raw=true" />
+  <img src="https://github.com/postech-hackaton-company-sa/.github/blob/main/profile/mvp1-arquitetura-dockercompose.svg?raw=true" />
 </p>
 
 Uma primeira abordagem foi criada com a utilizacao de puramente Docker. Esta solucao pode ser usada com o arquivo presente no arquivo [docker-compose](./../infra/docker-compose.yaml) da pasta `infra`.
@@ -58,5 +68,6 @@ Ao inves do servico de envio de email da AWS SES, optou-se por uma abordagem mai
 
 #### Arquitetura
 
--> Desenho
+![alt text](aws-mvp2.svg)
+
 -> Explicacao

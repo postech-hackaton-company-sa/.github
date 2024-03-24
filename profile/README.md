@@ -40,6 +40,38 @@ A Hackaton Company SA, uma empresa de grande porte com mais de 100.000 colaborad
   Embora não estejam representadas no diagrama arquitetural, outras ferramentas de monitoramento disponibilizadas pela AWS, como o <code>CloudWatch</code> para monitoramento de logs, métricas e alarmes, e o <code>AWS X-Ray</code> para análise de desempenho e depuração de aplicativos, serão utilizadas em todos os serviços. Essas soluções adicionais são essenciais para garantir o monitoramento contínuo da saúde e do desempenho do sistema, bem como para identificar e solucionar problemas rapidamente.
 </p>
 
+### Configurações importantes
+
+Para atender aos requisitos não funcionais definidos, adotaremos várias estratégias e práticas utilizando as ferramentas disponíveis na AWS e Kubernetes:
+
+**Desempenho:**
+
+Utilizaremos o Kubernetes para escalar horizontalmente os serviços conforme a demanda. Durante os horários de pico identificados, como 9h, 12h, 14h e 18h, configuraremos políticas de escalabilidade automática para aumentar o número de réplicas dos serviços, garantindo que o sistema possa lidar com o aumento repentino de tráfego.
+
+**Escalabilidade:**
+
+O Kubernetes proporcionará uma arquitetura escalável, permitindo que novos nós sejam adicionados automaticamente ao cluster para acomodar o crescimento da empresa. A utilização de contêineres e serviços gerenciados pela AWS, como o Amazon <code>EKS</code>, simplificará a escalabilidade do sistema sem a necessidade de alterações significativas na arquitetura.
+
+**Disponibilidade:**
+
+Configuraremos estratégias de alta disponibilidade no Kubernetes, garantindo que os serviços estejam operacionais 24/7. Utilizaremos recursos como balanceamento de carga, replicação de pods e distribuição geográfica dos nós para garantir a resiliência do sistema. Além disso, implementaremos monitoramento contínuo com ferramentas como o AWS CloudWatch para detectar e mitigar falhas rapidamente.
+
+**Segurança:**
+
+Adotaremos as melhores práticas de segurança da AWS e do Kubernetes para proteger os dados dos usuários. Isso inclui o uso de criptografia de dados em repouso e em trânsito, autenticação forte e autorização granular. Faremos uso de serviços como AWS Identity and Access Management (IAM) para controlar o acesso aos recursos.
+
+**Integridade dos Dados:**
+
+Utilizaremos bancos de dados gerenciados pela AWS, como Amazon RDS e Amazon DocumentDB, que garantem a integridade dos dados por meio de replicação, backups automáticos e recuperação em caso de falhas.
+
+**Manutenibilidade:**
+
+Adotaremos práticas de DevOps, como CI/CD (Continuous Integration/Continuous Deployment), para garantir uma entrega contínua de código.
+
+**Resiliência:**
+
+Configuraremos estratégias de recuperação de falhas no Kubernetes, como a reinicialização automática de pods e a recuperação de nós. 
+
 ### Pipeline
 <p align="center">
 <img src="https://github.com/postech-hackaton-company-sa/.github/blob/main/profile/image.png?raw=true" />
@@ -88,4 +120,13 @@ Para parar os serviços, pressione Ctrl + C no terminal onde o docker-compose up
   <img src="https://github.com/postech-hackaton-company-sa/.github/blob/main/profile/aws-mvp2.svg?raw=true" width="120%"/>
 </p>
 
--> Explicacao
+<p align="center">
+  Para o segundo MVP da nossa solução, estamos expandindo ainda mais as capacidades do sistema, adicionando dois novos serviços essenciais: o Serviço Administrativo e o Serviço de Notificações.
+</p>
+
+<p align="center">
+  O Serviço Administrativo tem como função principal aprovar ou recusar edições nos registros de ponto eletrônico solicitadas pelos funcionários. Essas solicitações são encaminhadas ao administrador, que pode revisá-las e tomar a ação apropriada. A comunicação entre o Serviço Administrativo e os funcionários será realizada por meio de mensagens usando a solução da AWS <code>SNS</code> e <code>SQS</code>, garantindo uma comunicação eficiente e confiável.
+</p>
+<p align="center">
+  Por sua vez, o Serviço de Notificações trabalhará em estreita colaboração com o Serviço de Pontos Eletrônicos, utilizando também mensagens para se comunicar. Isso permitirá que o Serviço de Notificações saiba quase em tempo real quando um funcionário registra seu ponto, evitando assim o envio de notificações erradas ou desatualizadas aos funcionários. Além disso, o Serviço de Notificações usará a solução da AWS chamada <code>AWS Batch</code> para realizar um dump dos dados dos funcionários fora do horário comercial para sua base de dados local. Essa abordagem é necessária devido ao grande volume de funcionários e garante uma manipulação eficiente e escalável dos dados.
+</p>

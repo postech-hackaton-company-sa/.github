@@ -120,13 +120,13 @@ Para parar os serviços, pressione Ctrl + C no terminal onde o docker-compose up
   <img src="https://github.com/postech-hackaton-company-sa/.github/blob/main/profile/aws-mvp2.svg?raw=true" width="120%"/>
 </p>
 
-<p align="center">
+<p align="justify">
   Para o segundo MVP da nossa solução, estamos expandindo ainda mais as capacidades do sistema, adicionando dois novos serviços essenciais: o Serviço Administrativo e o Serviço de Notificações.
 </p>
 
-<p align="center">
+<p align="justify">
   O Serviço Administrativo tem como função principal aprovar ou recusar edições nos registros de ponto eletrônico solicitadas pelos funcionários. Essas solicitações são encaminhadas ao administrador, que pode revisá-las e tomar a ação apropriada. A comunicação entre o Serviço Administrativo e os funcionários será realizada por meio de mensagens usando a solução da AWS <code>SNS</code> e <code>SQS</code>, garantindo uma comunicação eficiente e confiável.
 </p>
-<p align="center">
+<p align="justify">
   Por sua vez, o Serviço de Notificações trabalhará em estreita colaboração com o Serviço de Pontos Eletrônicos, utilizando também mensagens para se comunicar. Isso permitirá que o Serviço de Notificações saiba quase em tempo real quando um funcionário registra seu ponto, evitando assim o envio de notificações erradas ou desatualizadas aos funcionários. Além disso, o Serviço de Notificações usará a solução da AWS chamada <code>AWS Batch</code> para realizar um dump dos dados dos funcionários fora do horário comercial para sua base de dados local. Essa abordagem é necessária devido ao grande volume de funcionários e garante uma manipulação eficiente e escalável dos dados.
 </p>

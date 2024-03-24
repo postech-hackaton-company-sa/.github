@@ -3,7 +3,7 @@ version: '3.7'
 services:
   mongodb:
     image: mongo:latest
-    container_name: postech-documentdb-ponto-eletronico
+    container_name: postech-mongodb-ponto-eletronico
     ports:
       - "27017:27017"
     environment:
@@ -11,38 +11,45 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: Mudar1234
       MONGO_INITDB_DATABASE: ponto-eletronico
 
-  mysql:
+  mysql-funcionarios:
     image: mysql:latest
-    container_name: postech-rds-hackaton-funcionarios
+    container_name: postech-mysql-hackaton-funcionarios
     environment:
       MYSQL_ROOT_PASSWORD: mysecretpassword
       MYSQL_DATABASE: funcionarios
     ports:
+      - "3307:3306"
+
+  mysql-keycloak:
+    image: mysql:latest
+    container_name: postech-mysql-hackaton-keycloak
+    environment:
+      MYSQL_ROOT_PASSWORD: mysecretpassword
+    ports:
       - "3306:3306"
 
   keycloak:
-    image: quay.io/keycloak/keycloak:latest
-    container_name: postech-hackaton-keycloak
-    restart: on-failure
-    command:
-      - start-dev 
-      - --import-realm
-    volumes:
-      - ./infra:/config/
-    environment:
-      - KEYCLOAK_USER=user
-      - KEYCLOAK_PASSWORD=Mudar1234
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=Mudar1234
-      - DB_VENDOR=MYSQL
-      - DB_ADDR=mysql
-      - DB_DATABASE=keycloak
-      - DB_USER=root
-      - DB_PASSWORD=mysecretpassword
-    ports:
-      - "8083:8080"
+    image: quay.io/keycloak/keycloak:21.0
     depends_on:
-      - mysql
+      - mysql-keycloak
+    container_name: stepup-keycloak
+    hostname: stepup-keycloak
+    ports:
+      - 9080:8080
+    volumes:
+      - ./keycloak/config:/opt/keycloak/data/import
+    environment:
+      KC_HOSTNAME: localhost
+      KEYCLOAK_USER: user
+      KEYCLOAK_PASSWORD: Mudar1234
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: Mudar1234
+      DB_VENDOR: MYSQL
+      DB_ADDR: mysql
+      DB_DATABASE: keycloak
+      DB_USER: root
+      DB_PASSWORD: mysecretpassword
+    entrypoint: [ "/opt/keycloak/bin/kc.sh", "start-dev", "--import-realm" ]
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.4
@@ -65,39 +72,66 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  postech-hackaton-apigateway:
+    depends_on:
+      - keycloak
+    image: danielmaria/postech-hackaton-apigateway:latest
+    ports:
+      - "8080:8080"
+    environment:
+      LOGGING_LEVEL_ROOT: INFO
+      API_PONTO_ELETRONICO: http://postech-hackaton-ponto-eletronico:8080
+      API_FUNCIONARIOS: http://postech-hackaton-relatorios:8080
+      API_RELATORIO: http://postech-hackaton-funcionarios:8080
+      KEYCLOAK_URL: http://stepup-keycloak:8080
+      KEYCLOAK_REALM: hackaton
+      KEYCLOAK_CLIENT_ID: hackaton
+      KEYCLOAK_CLIENT_SECRET: LMdmBGAA3jzWRDedP2okVlv172gzwRFB
       
-  # postech-hackaton-ponto-eletronico:
-  #   depends_on:
-  #     - mongodb
-  #   image: danielmaria/postech-hackaton/postech-ponto-eletronico:latest
-  #   ports:
-  #     - "8080:8080"
-  #   environment:
-  #     SPRING_DATASOURCE_USERNAME: admin
-  #     SPRING_DATASOURCE_PASSWORD: Mudar1234
-  #     LOGGING_LEVEL_ROOT: INFO
+  postech-hackaton-ponto-eletronico:
+    depends_on:
+      - mongodb
+      - postech-hackaton-apigateway
+    image: danielmaria/postech-hackaton-ponto-eletronico:latest
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: Mudar1234
+      SPRING_DATASOURCE_DATABASE: ponto-eletronico
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      LOGGING_LEVEL_ROOT: INFO
 
-  # postech-hackaton-relatorios:
-  #   depends_on:
-  #     - mongodb
-  #   image: danielmaria/postech-hackaton/postech-clientes:latest
-  #   ports:
-  #     - "8081:8080"
-  #   environment:
-  #     SPRING_DATASOURCE_URL: jdbc:mongo://mongodb:27017/ponto-eletronico #Talvez mudar para o nome do container 
-  #     SPRING_DATASOURCE_USERNAME: cliente_user 
-  #     SPRING_DATASOURCE_PASSWORD: cliente_password
-  #     LOGGING_LEVEL_ROOT: INFO
-  #     API_PONTO_ELETRONICO: http://postech-hackaton-ponto-eletronico:8080
+  postech-hackaton-relatorios:
+    depends_on:
+      - postech-hackaton-apigateway
+    image: danielmaria/postech-hackaton-relatorios:latest
+    ports:
+      - "8082:8080"
+    environment:
+      LOGGING_LEVEL_ROOT: INFO
+      API_FUNCIONARIOS: http://postech-hackaton-funcionarios:8080
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      MAIL_USERNAME: <email do gmail>
+      MAIL_PASSWORD: <senha do email para apps (https://support.google.com/accounts/answer/185833)>
 
-  # postech-hackaton-funcionarios:
-  #   depends_on:
-  #     - mysql
-  #   image: danielmaria/postech-hackaton/postech-funcionarios:latest
-  #   ports:
-  #     - "8082:8080"
-  #   environment:
-  #     SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/funcionarios #Talvez mudar para o nome do container
-  #     SPRING_DATASOURCE_USERNAME: root
-  #     SPRING_DATASOURCE_PASSWORD: mysecretpassword
-  #     LOGGING_LEVEL_ROOT: INFO
+
+  postech-hackaton-funcionarios:
+    depends_on:
+      - mysql-funcionarios
+      - postech-hackaton-apigateway
+    image: danielmaria/postech-hackaton-funcionarios:latest
+    ports:
+      - "8083:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-funcionarios:3306/funcionarios?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: mysecretpassword
+      LOGGING_LEVEL_ROOT: INFO
+      KEYCLOAK_URL: http://stepup-keycloak:8080
+      KEYCLOAK_REALM_MASTER: master
+      KEYCLOAK_REALM_HACKATON: hackaton
+      KEYCLOAK_CLIENT_ID: admin-cli
+      KEYCLOAK_USERNAME: admin
+      KEYCLOAK_PASSWORD: Mudar1234
